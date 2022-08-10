@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900&display=swap');
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body
+{
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background: linear-gradient(#2b1055,#7597de);
+
+}
+::-webkit-scrollbar{
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: linear-gradient(transparent, #4fc518);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background: linear-gradient(transparent, #00c6ff);
+}
+
+
+section 
+{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    padding: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+/*설명과 위화면의 색감 그라데이션부분 */
+/*content가 있어야함*/
+section::before 
+{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, #1c0522, transparent);
+    z-index: 9;
+}
+section img
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/*주변 색에 맞게 이미지 색감 채우기*/
+section img#moon
+{
+    z-index: -1;
+    mix-blend-mode: screen;
+}
+
+section img#mountains_front
+{
+    z-index: 8;
+}
+
+section img#stars
+{
+    animation: spin 100s infinite linear;
+    
+}
+@keyframes spin{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(359deg);
+    }
+}
+
+#text
+{
+    position: absolute;
+    color: #fff;
+    white-space: nowrap;
+    font-size: 7.5vw;
+    z-index: 8;
+    
+}
+#btn
+{
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 40px;
+    background: #fff;
+    color: #2b1055;
+    font-size: 1.5em;
+    z-index: 9;
+    transform: translateY(100px);
+}
+.sec
+{
+    position: relative;
+    padding: 100px;
+    background: #1c0522;
+}
+.sec h2
+{
+    font-size: 4.5em;
+    margin-bottom: 10px;
+    color: #fff;
+}
+.sec p
+{
+    font-size: 3em;
+    color: #fff;
+}
+
+/* ///////////////////////////////////////////// */
+.LoginForm
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    
+}
+
+.LoginForm label
+{
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 2em;
+}
+.LoginForm button
+{
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    transition: 0.25s;
+    outline: none;
+    cursor: pointer;
+    border: none;
+
+}
+.LoginForm button:hover
+{
+    background: rgb(81, 212, 109);
+    color: #2b1055;
+}
+.LoginForm input
+{
+    background: none;
+    border: none;
+    color: #fff;
+}
+
+/* ///////////////////////////////////////////// */
+
+
+.User
+{
+    position: absolute;
+    font-size: 1.5em;
+    color: #fff;
+    left: 53%;
+    top: 70%;
+}
+
+.NavBar .Alert
+{
+    position: absolute;
+    left: 30%;
+}
+
+.NavBar header
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 145%;
+    padding: 30px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    /* background-color: rgb(59, 5, 90); */
+}
+.NavBar .logo
+{
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.NavBar header ul
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 100%;
+}
+.NavBar header ul li
+{
+    list-style: none;
+    margin-left: 20px;
+}
+.NavBar header ul li a 
+{
+    text-decoration: none;
+    padding: 6px 15px;
+    color: #fff;
+    border-radius: 20px;
+}
+.NavBar header ul li a:hover,
+.NavBar header ul li a.active
+{
+    background: #fff;
+    color: #2b1055;
+}
+.NavBar button
+{
+    color: #2b1055;
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    transition: 0.25s;
+    outline: none;
+    cursor: pointer;
+    border: none;
+
+}
+.NavBar button:hover
+{
+    background: #fff;
+    color: #2b1055;
+}
