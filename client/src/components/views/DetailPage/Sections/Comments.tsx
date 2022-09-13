@@ -1,22 +1,34 @@
 import React,{useState} from 'react'
 import {Button, Input} from 'antd'
 import axios from 'axios'
-import {useSelector} from 'react-redux'
 import SingleComment from './SingleComment'
 import ReplyComment from './ReplyComment'
+import {useSelector} from 'react-redux'
+import { CommentTypes } from '../DetailPage'
 
 const {TextArea} = Input
 
-function Comments(props) {
+interface RootState {
+    user: {userData: {_id: string }}
+}
 
-    const user = useSelector(state=> state.user)
-    const [Comment, setComment] = useState("")
+interface CommentProps {
+    CommentLists: CommentTypes[],
+    postId: string
+    refreshFunction(newComment:CommentTypes): void
+}
 
-    const handleChange = (e) =>{
+
+function Comments({CommentLists, postId, refreshFunction}: CommentProps) {
+
+    const user = useSelector((state:RootState)=> state.user)
+    const [Comment, setComment] = useState<string>("")
+
+    const handleChange:React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>{
         setComment(e.currentTarget.value)
     }
 
-    const onSubmit = (e) => {
+    const onSubmit:React.MouseEventHandler<HTMLElement> = (e) => {
         if(Comment === ""){
             alert("댓글을 입력하십시오")
         }
@@ -25,13 +37,13 @@ function Comments(props) {
             const variables = {
                 content: Comment,
                 writer: user.userData._id,
-                postId: props.postId
+                postId: postId
             }
             axios.post('/api/comment/saveComment', variables)
             .then(response=>{
                 if(response.data.success){
                     setComment("")
-                    props.refreshFunction(response.data.result)
+                    refreshFunction(response.data.result)
                 }else{
                     alert('댓글저장에 실패했습니다')
                 }
@@ -46,22 +58,22 @@ function Comments(props) {
             <p>Comments</p>
             <hr/>
             {/*Comment Lists*/}
-            {props.CommentLists && props.CommentLists.map((comment, index)=>(
+            {CommentLists && CommentLists.map((comment, index:number)=>(
                 (!comment.responseTo &&                 
                 <React.Fragment>
-                    <SingleComment comment = {comment} postId={props.postId} userId={user.userData._id} refreshFunction={props.refreshFunction}/>
-                    <ReplyComment CommentLists={props.CommentLists} postId={props.postId} parentCommentId={comment._id} refreshFunction={props.refreshFunction}/>
+                    <SingleComment comment = {comment} postId={postId} userId={user.userData._id} refreshFunction={refreshFunction}/>
+                    <ReplyComment CommentLists={CommentLists} postId={postId} parentCommentId={comment._id} refreshFunction={refreshFunction}/>
                 </React.Fragment>)
 
             ))}
             {/* Root Comment Form*/}
-            <form style={{display:'flex'}} onSubmit={onSubmit}>
+            <form style={{display:'flex'}}>
                 <TextArea
                     style={{width: '100%', borderRadius: '5px'}}
                     onChange = {handleChange}
                     value = {Comment}
                     placeholder="write some comments"
-                    required= 'required'
+                    required= {true}
                 />
             <br/>
             <Button style={{width: '100px', height:'52px'}} onClick={onSubmit}>Submit</Button>

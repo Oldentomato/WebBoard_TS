@@ -9,9 +9,14 @@ import Like from './Sections/Like'
 import {Link} from 'react-router-dom'
 import { RouteComponentProps, useLocation } from 'react-router-dom';
 import Loading from '../LoadingScene/Loading'
+import {useSelector} from 'react-redux'
 
 
-const {kakao} = window;
+const {kakao}:any = window;
+
+type ResultArr ={
+    address_name: string
+}
 
 interface stateType {
     views: number,
@@ -23,13 +28,22 @@ interface FileType {
     content: string,
     title: string,
     filepath: string,
-    writer: {_id: string},
+    writer: {_id: string, image: string, name:string},
     createdAt: string
 }
 
-interface userType {
-    userData: {_id: string}
+interface RootState {
+    user: {userData: {_id: string}},
 }
+
+export interface CommentTypes {
+    _id: string,
+    content: string,
+    writer: {_id: string, image: string, name: string},
+    postId: string,
+    responseTo: string,
+}
+
 
 function DetailPage (props:RouteComponentProps<{BoardId?: string}>) {
 
@@ -37,13 +51,13 @@ function DetailPage (props:RouteComponentProps<{BoardId?: string}>) {
 
     const BoardId = props.match.params.BoardId //App.js에 있는 :fileId를 참조
     const [File, setFile] = useState<FileType>({_id: "", content:"",title:"",
-                                                filepath:"", writer:{_id:""}, createdAt:""})
-    const [CommentLists, setCommentLists] = useState([])
+                                                filepath:"", writer:{_id:"",image:"",name:""}, createdAt:""})
+    const [CommentLists, setCommentLists] = useState<CommentTypes[]>([])
     const [OpenMap, setOpenMap] = useState(true)
     const [Region, setRegion] = useState("")
     const Views = location.state.views
     const isGPS = location.state.isGPS
-    const [user, setuser] = useState<userType>({userData:{_id:""}})
+    const user = useSelector((state:RootState) => state.user)
 
 
     const fileVariable = {
@@ -54,7 +68,7 @@ function DetailPage (props:RouteComponentProps<{BoardId?: string}>) {
     const SetMap = (lat:number, lon:number) =>{
         var container = document.getElementById("map");
         var geocoder = new kakao.maps.services.Geocoder();
-        geocoder.coord2RegionCode(lon,lat,(result:Array<String>,status:boolean)=>{
+        geocoder.coord2RegionCode(lon,lat,(result:Array<ResultArr>,status:boolean)=>{
             if(status === kakao.maps.services.Status.OK){
                 setRegion(result[0].address_name)
             }
@@ -81,7 +95,7 @@ function DetailPage (props:RouteComponentProps<{BoardId?: string}>) {
         props.history.push('/Boards')
     }
 
-    const updateComment = (newComment:String) =>{
+    const updateComment = (newComment:CommentTypes) =>{
         setCommentLists(CommentLists.concat(newComment))
     }
 
