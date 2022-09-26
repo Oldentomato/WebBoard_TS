@@ -4,14 +4,23 @@ import TextArea from 'antd/lib/input/TextArea'
 import axios from 'axios'
 import {useSelector} from 'react-redux'
 import Like from './Like'
+import {CommentTypes} from '../DetailPage'
 
-function SingleComment(props) {
+interface SingleCommentProps{
+    CommentLists: CommentTypes[],
+    postId: string,
+    refreshFunction(newComment:CommentTypes): void,
+    comment: {_id: string, writer:{name:string,image:string}, content:string},
+    userId: string
+}
+
+function SingleComment({CommentLists, postId, refreshFunction, comment, userId}:SingleCommentProps) {
 
     const [CommentValue, setCommentValue] = useState("")
-    const [OpenReply, setOpenReply] = useState("")
+    const [OpenReply, setOpenReply] = useState<boolean>(false)
     const user = useSelector(state=>state.user)
 
-    const handleChange = (e) =>{
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
         setCommentValue(e.currentTarget.value)
     }
 
@@ -20,11 +29,11 @@ function SingleComment(props) {
     }
 
     const action = [
-        <Like style={{height:'1px'}} comment boardId = {props.postId} commentId={props.comment._id} userId={props.userId}/>,
+        <Like style={{height:'1px'}} comment boardId = {postId} commentId={comment._id} userId={userId}/>,
         <span onClick={openReply} key = "comment-basic-reply-to">Reply to</span>
     ]
 
-    const onSubmit = (e) =>{//답글저장부분
+    const onSubmit = (e:React.FormEvent<HTMLFormElement>) =>{//답글저장부분
         if(CommentValue === ""){
             alert("댓글을 입력하십시오")
         }
@@ -33,8 +42,8 @@ function SingleComment(props) {
 
             const variables = {
                 writer: user.userData._id,
-                postId: props.postId,
-                responseTo: props.comment._id,
+                postId: postId,
+                responseTo: comment._id,
                 content: CommentValue
             }
             axios.post('/api/comment/saveComment',variables)
@@ -42,7 +51,7 @@ function SingleComment(props) {
                 if(response.data.success){
                     setCommentValue("")
                     setOpenReply(!OpenReply)
-                    props.refreshFunction(response.data.result)
+                    refreshFunction(response.data.result)
                 }else{
                     alert('댓글 저장에 실패했습니다')
                 }
@@ -55,16 +64,16 @@ function SingleComment(props) {
         <div>
             <Comment
                 actions={action}
-                author={props.comment.writer.name}
+                author={comment.writer.name}
                 avatar={
                     <Avatar
-                        src={props.comment.writer.image}
+                        src={comment.writer.image}
                         alt="image"
                     />
                 }
                 content={
                     <p>
-                        {props.comment.content}
+                        {comment.content}
                     </p>
                 }
             ></Comment>
